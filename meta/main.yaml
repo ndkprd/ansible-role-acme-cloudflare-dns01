@@ -3,7 +3,7 @@
 galaxy_info:
   role_name: acme_cloudflare_dns01
   author: ndkprd
-  description: "Ansible role to generate SSL certificate using DNS-01 challenge via Cloudflare."
+  description: "Ansible role to generate SSL certificates using DNS-01 challenge via Cloudflare."
   license: MIT
   min_ansible_version: "2.10"
   platforms:
