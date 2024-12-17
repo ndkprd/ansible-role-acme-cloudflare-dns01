@@ -1,0 +1,33 @@
+---
+
+- name: Generate an OpenSSL RSA 4096 private key for CSR for {{ acme_domain }}.
+  community.crypto.openssl_privatekey:
+    path: "{{ acme_private_cert_key_dir }}"
+    size: 4096
+    type: RSA
+  register: acme_csr_private_key_results
+  run_once: true
+
+- name: Debug out the generated CSR private key.
+  ansible.builtin.debug:
+    msg:
+      - "The private key for the CSR is generated at {{ acme_csr_private_key_results.filename }}."
+  tags: [debug]
+
+- name: Generate an OpenSSL Certificate Signing Request for {{ acme_domain }}
+  community.crypto.openssl_csr:
+    path: "{{ acme_csr_dir }}"
+    privatekey_path: "{{ acme_private_cert_key_dir }}"
+    country_name: "{{ acme_cert_country_id }}"
+    common_name: "{{ acme_domain }}"
+    organization_name: "{{ acme_cert_org_name }}"
+    email_address: "{{ acme_account_email }}"
+    subject_alt_name: "{{ acme_cert_san | map('regex_replace', '^', 'DNS:') | list }}"
+  run_once: true
+  register: acme_csr_generate_result
+
+- name: Debug out the generated CSR.
+  ansible.builtin.debug:
+    msg:
+      - "The CSR is generated at {{ acme_csr_generate_result.filename }}."
+  tags: [debug]

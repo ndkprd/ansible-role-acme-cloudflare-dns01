@@ -1,0 +1,19 @@
+---
+
+- name: Create TXT record using alias on Cloudflare.
+  community.general.cloudflare_dns:
+    zone: "{{ acme_cf_alias_zone }}"
+    record: "{{ acme_cf_alias_record }}"
+    type: TXT
+    value: "{{ item }}"
+    account_email: "{{ acme_cf_api_email }}"
+    # account_api_key: "{{ acme_cf_api_token }}"
+    api_token: "{{ acme_cf_api_token }}"
+    state: present
+    solo: false
+  when:
+    - acme_cf_use_alias
+    - acme_domain_txt_record is defined or acme_domain_wildcard_txt_record is defined
+  loop:
+    - "{{ acme_domain_txt_record }}"
+    - "{{ acme_domain_wildcard_txt_record }}"

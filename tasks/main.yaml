@@ -1,0 +1,22 @@
+---
+
+- name: Run pre-task.
+  ansible.builtin.import_tasks: 00-pre-task.yaml
+
+- name: Generate private key.
+  ansible.builtin.import_tasks: 01-generate-private-key.yaml
+
+- name: Generate CSR.
+  ansible.builtin.import_tasks: 02-generate-csr.yaml
+
+- name: Generate DNS challenge.
+  ansible.builtin.import_tasks: 03-generate-dns-challenge.yaml
+
+- name: Generate TXT record on Cloudflare.
+  ansible.builtin.import_tasks: 04-generate-txt-record.yaml
+
+- name: Validate DNS challenge.
+  ansible.builtin.import_tasks: 05-validate-dns-challenge.yaml
+
+- name: Generate PKCS#12 certificates.
+  ansible.builtin.import_tasks: 06-generate-p12.yaml
