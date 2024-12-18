@@ -19,7 +19,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           automatic_release_tag: ${{ github.ref_name }}
           prerelease: false
-          title: "Release v${{ github.ref_name }}"
+          title: "Release ${{ github.ref_name }}"
       # push to Ansible Galaxy.
       - name: Set up Python 3.
         uses: actions/setup-python@v5
