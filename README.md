@@ -54,7 +54,7 @@ The generated files will be located in `/tmp/{{ acme_domain }}` directory.
 
 ## TODO
 
-- add support for non-aliases/CNAME delegation;
+- ~~add support for non-aliases/CNAME delegation;~~
 - change inputs from string to list so it can be used for multiple domains at once.
 
 ## License
