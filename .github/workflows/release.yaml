@@ -11,6 +11,7 @@ jobs:
     uses: ndkprd/actions/.github/workflows/ansible-release-to-galaxy.yaml@main
     with:
       release_tag: ${{ github.ref_name }}
-    secrets:
       galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}
-      github_token: ${{ secrets.GITHUB_TOKEN }}
+    # secrets:
+    #   galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}
+    #   github_token: ${{ secrets.GITHUB_TOKEN }}
