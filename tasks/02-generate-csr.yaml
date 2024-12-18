@@ -12,6 +12,7 @@
   ansible.builtin.debug:
     msg:
       - "The private key for the CSR is generated at {{ acme_csr_private_key_results.filename }}."
+  run_once: true
   tags: [debug]
 
 - name: Generate an OpenSSL Certificate Signing Request for {{ acme_domain }}
@@ -30,4 +31,5 @@
   ansible.builtin.debug:
     msg:
       - "The CSR is generated at {{ acme_csr_generate_result.filename }}."
+  run_once: true
   tags: [debug]

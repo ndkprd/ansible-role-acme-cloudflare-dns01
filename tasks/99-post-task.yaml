@@ -1,0 +1,15 @@
+---
+
+- name: Debug certificate files location.
+  ansible.builtin.debug:
+    msg:
+      - "Private key file: {{ acme_private_cert_key_dir }}."
+      - "CSR file: {{ acme_csr_dir }}."
+      - "Cert file (.crt): {{ acme_cert_dir }}."
+      - "Cert file (.p12): {{ acme_cert_p12_dir }}."
+      - "Intermediate file: {{ acme_cert_intermediate_dir }}"
+      - "Fullchain cert file: {{ acme_cert_fullchain_dir }}."
+  when:
+    acme_domain_txt_value is defined or
+    acme_domain_wildcard_txt_value is defined
+  run_once: true

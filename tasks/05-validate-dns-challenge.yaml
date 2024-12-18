@@ -4,10 +4,10 @@
   ansible.builtin.pause:
     seconds: 30
   when:
-    acme_domain_txt_record is defined or acme_domain_wildcard_txt_record is defined
+    acme_domain_txt_value is defined or acme_domain_wildcard_txt_value is defined
   run_once: true
 
-- name: Let the challenge be validated and retrieve the cert and intermediate certificate for {{ acme_domain }}.
+- name: Validate challenge and retrieve the cert and intermediate certificate for {{ acme_domain }}.
   community.crypto.acme_certificate:
     account_key_src: "{{ acme_private_account_key_dir }}"
     account_email: "{{ acme_account_email }}"
@@ -21,7 +21,7 @@
     acme_version: 2
     data: "{{ acme_dns_challenge_results }}"
   when:
-    acme_domain_txt_record is defined or acme_domain_wildcard_txt_record is defined
+    acme_domain_txt_value is defined or acme_domain_wildcard_txt_value is defined
   register: validation_result
   retries: 5
   delay: 10
@@ -41,7 +41,8 @@
     solo: false
   when:
     - acme_cf_use_alias
-    - acme_domain_txt_record is defined or acme_domain_wildcard_txt_record is defined
+    - acme_domain_txt_value is defined or acme_domain_wildcard_txt_value is defined
   loop:
-    - "{{ acme_domain_txt_record }}"
-    - "{{ acme_domain_wildcard_txt_record }}"
+    - "{{ acme_domain_txt_value }}"
+    - "{{ acme_domain_wildcard_txt_value }}"
+  run_once: true

@@ -1,21 +1,5 @@
 ---
 
-- name: Make sure the needed directory exists for {{ acme_domain }}.
-  become: true
-  ansible.builtin.file:
-    path: "{{ acme_files_dir }}/{{ acme_domain }}"
-    state: directory
-    mode: "777"
-    owner: "{{ ansible_user }}"
-  register: acme_files_dir_results
-  run_once: true
-
-- name: Debug out the path.
-  ansible.builtin.debug:
-    msg:
-      - "Directory {{ acme_files_dir_results.path }} is created/already exists."
-  tags: [debug]
-
 - name: Generate an OpenSSL RSA 4096 private key for account for {{ acme_domain }}.
   community.crypto.openssl_privatekey:
     path: "{{ acme_private_account_key_dir }}"
@@ -28,4 +12,5 @@
   ansible.builtin.debug:
     msg:
       - "The private key for Letsencrypt account is generated at {{ acme_account_private_key_results.filename }}."
+  run_once: true
   tags: [debug]

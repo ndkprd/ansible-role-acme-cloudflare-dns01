@@ -20,3 +20,22 @@
     name: "{{ ansible_user }}"
     state: present
   run_once: true
+
+- name: Make sure the needed directory exists for {{ acme_domain }}.
+  become: true
+  ansible.builtin.file:
+    path: "{{ acme_files_dir }}/{{ acme_domain }}"
+    state: directory
+    mode: "770"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    recurse: true
+  register: acme_files_dir_results
+  run_once: true
+
+- name: Debug out the path.
+  ansible.builtin.debug:
+    msg:
+      - "Directory {{ acme_files_dir_results.path }} is created/already exists."
+  run_once: true
+  tags: [debug]

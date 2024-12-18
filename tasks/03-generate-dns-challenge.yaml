@@ -23,8 +23,8 @@
 
 - name: Extract dns_challenge TXT value.
   ansible.builtin.set_fact:
-    acme_domain_txt_record: "{{ acme_dns_challenge_results.challenge_data[acme_domain]['dns-01'].resource_value }}"
-    acme_domain_wildcard_txt_record: "{{ acme_dns_challenge_results.challenge_data[acme_domain_wildcard]['dns-01'].resource_value }}"
+    acme_domain_txt_value: "{{ acme_dns_challenge_results.challenge_data[acme_domain]['dns-01'].resource_value }}"
+    acme_domain_wildcard_txt_value: "{{ acme_dns_challenge_results.challenge_data[acme_domain_wildcard]['dns-01'].resource_value }}"
   when:
     - acme_dns_challenge_results.challenge_data is defined
   run_once: true
@@ -32,8 +32,8 @@
 - name: Debug out the challenge value.
   ansible.builtin.debug:
     msg:
-      - "acme_domain_txt_record: {{ acme_domain_txt_record }}"
-      - "acme_domain_wildcard_txt_record: {{ acme_domain_wildcard_txt_record }}"
+      - "acme_domain_txt_value: {{ acme_domain_txt_value }}"
+      - "acme_domain_wildcard_txt_value: {{ acme_domain_wildcard_txt_value }}"
   when:
     - acme_dns_challenge_results.challenge_data is defined
   run_once: true

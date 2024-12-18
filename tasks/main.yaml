@@ -1,6 +1,6 @@
 ---
 
-- name: Run pre-task.
+- name: Run pre-tasks.
   ansible.builtin.import_tasks: 00-pre-task.yaml
 
 - name: Generate private key.
@@ -20,3 +20,6 @@
 
 - name: Generate PKCS#12 certificates.
   ansible.builtin.import_tasks: 06-generate-p12.yaml
+
+- name: Run post-tasks.
+  ansible.builtin.import_tasks: 99-post-task.yaml
