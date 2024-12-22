@@ -8,9 +8,6 @@ on:
 
 jobs:
   release-to-galaxy:
-    uses: ndkprd/actions/.github/workflows/ansible-release-to-galaxy.yaml@main
-    with:
-      github_release_tag: ${{ github.ref_name }}
+    uses: ndkprd/actions/ansible/ansible-release-to-galaxy.yaml@main
     secrets:
-      repo_token: ${{ secrets.GITHUB_TOKEN }}
       galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}
