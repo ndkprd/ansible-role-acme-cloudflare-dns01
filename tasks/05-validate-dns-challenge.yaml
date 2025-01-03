@@ -3,8 +3,6 @@
 - name: Wait for 30 seconds for domain propagation.
   ansible.builtin.pause:
     seconds: 30
-  # when:
-  #   acme_domain_txt_value is defined or acme_domain_wildcard_txt_value is defined
   run_once: true
 
 - name: Validate challenge and retrieve the cert and intermediate certificates.
@@ -32,22 +30,3 @@
   delay: 10
   until: validation_result is not failed
   run_once: true
-
-# - name: Cleanup TXT records.
-#   community.general.cloudflare_dns:
-#     zone: "{{ acme_cf_alias_zone }}"
-#     record: "{{ acme_cf_alias_record }}"
-#     type: TXT
-#     value: "{{ item }}"
-#     account_email: "{{ acme_cf_api_email }}"
-#     # account_api_key: "{{ acme_cf_api_token }}"
-#     api_token: "{{ acme_cf_api_token }}"
-#     state: absent
-#     solo: false
-#   when:
-#     - acme_cf_use_alias
-#     - acme_domain_txt_value is defined or acme_domain_wildcard_txt_value is defined
-#   loop:
-#     - "{{ acme_domain_txt_value }}"
-#     - "{{ acme_domain_wildcard_txt_value }}"
-#   run_once: true

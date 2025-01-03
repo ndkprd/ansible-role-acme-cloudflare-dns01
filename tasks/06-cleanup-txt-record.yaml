@@ -14,7 +14,7 @@
         state: absent
         solo: false
       when:
-        - item.alias_enabled
+        - item.alias_enabled | default(false)
         - (item.domain_txt_value | length) > 0
       loop: "{{ _challenge_materials }}"
       loop_control:
@@ -32,7 +32,7 @@
         state: absent
         solo: false
       when:
-        - item.alias_enabled
+        - item.alias_enabled | default(false)
         - (item.domain_wildcard_txt_value | length) > 0
       loop: "{{ _challenge_materials }}"
       loop_control:
@@ -71,7 +71,7 @@
         state: absent
         solo: false
       when:
-        - not item.alias_enabled
+        - not item.alias_enabled | default(false)
         - (item.domain_wildcard_txt_value | length) > 0
       loop: "{{ _challenge_materials }}"
       loop_control:
