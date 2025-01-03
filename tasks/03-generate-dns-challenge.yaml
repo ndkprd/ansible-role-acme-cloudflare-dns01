@@ -1,39 +1,67 @@
 ---
 
-- name: Create a challenge for the wildcard domain using account key file for {{ acme_domain }}.
+- name: Create a challenge for the wildcard domain using account key file.
   become: true
   community.crypto.acme_certificate:
-    account_key_src: "{{ acme_private_account_key_dir }}"
+    account_key_src: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_account_private.key"
     account_email: "{{ acme_account_email }}"
-    src: "{{ acme_csr_dir }}"
-    cert: "{{ acme_cert_dir }}"
+    src: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}.csr"
+    cert: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}.crt"
     challenge: "dns-01"
     acme_directory: "{{ acme_server_dir }}"
     remaining_days: "{{ acme_remaining_days }}"
     acme_version: 2
     terms_agreed: true
+  loop: "{{ acme_domains }}"
+  loop_control:
+    label: "{{ item.domain }}"
   register: acme_dns_challenge_results
   run_once: true
 
-- name: Debug dns_challenge variable for {{ acme_domain }}.
+- name: Debug dns_challenge variable.
   ansible.builtin.debug:
-    var: acme_dns_challenge_results
+    var: item
   run_once: true
+  loop: "{{ acme_dns_challenge_results.results }}"
+  loop_control:
+    label: "{{ item.item.domain }}"
   tags: [debug]
 
-- name: Extract dns_challenge TXT value.
+- name: Construct new lists for DNS-01 challenge.
+  vars:
+    _challenge_materials: []
   ansible.builtin.set_fact:
-    acme_domain_txt_value: "{{ acme_dns_challenge_results.challenge_data[acme_domain]['dns-01'].resource_value }}"
-    acme_domain_wildcard_txt_value: "{{ acme_dns_challenge_results.challenge_data[acme_domain_wildcard]['dns-01'].resource_value }}"
-  when:
-    - acme_dns_challenge_results.challenge_data is defined
+    _challenge_materials: |
+      {{
+        _challenge_materials + [
+          {
+            "challenge_data": item,
+            "domain": item.item.domain,
+            "domain_txt_value": item.challenge_data[item.item.domain]['dns-01'].resource_value | default(""),
+            "domain_wildcard": "*." + item.item.domain,
+            "domain_wildcard_txt_value": item.challenge_data["*." + item.item.domain]['dns-01'].resource_value | default (""),
+            "alias_enabled": (acme_domains | selectattr('domain', 'equalto', item.item.domain) | first).alias_enabled,
+            "alias_zone": (acme_domains | selectattr('domain', 'equalto',  item.item.domain) | first).alias_zone,
+            "alias_record": (acme_domains | selectattr('domain', 'equalto',  item.item.domain) | first).alias_record
+          },
+        ]
+      }}
   run_once: true
+  loop: "{{ acme_dns_challenge_results.results }}"
+  loop_control:
+    label: "{{ item.item.domain }}"
 
-- name: Debug out the challenge value.
+# - name: Debug out the challenge value.
+#   ansible.builtin.debug:
+#     msg:
+#       - "acme_domain_txt_value: {{ acme_domain_txt_value }}"
+#       - "acme_domain_wildcard_txt_value: {{ acme_domain_wildcard_txt_value }}"
+#   when:
+#     - acme_dns_challenge_results.challenge_data is defined
+#   run_once: true
+
+- name: Debug out the constructed list.
   ansible.builtin.debug:
-    msg:
-      - "acme_domain_txt_value: {{ acme_domain_txt_value }}"
-      - "acme_domain_wildcard_txt_value: {{ acme_domain_wildcard_txt_value }}"
-  when:
-    - acme_dns_challenge_results.challenge_data is defined
+    var: _challenge_materials
   run_once: true
+  tags: [debug]

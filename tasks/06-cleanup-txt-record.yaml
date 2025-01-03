@@ -1,9 +1,9 @@
 ---
 
-- name: Create TXT records for delegated domains.
+- name: Delete TXT records for delegated domains.
   block:
 
-    - name: Create TXT record using alias on Cloudflare (base).
+    - name: Delete TXT record using alias on Cloudflare (base).
       community.general.cloudflare_dns:
         zone: "{{ item.alias_zone }}"
         record: "{{ item.alias_record }}"
@@ -11,7 +11,7 @@
         value: "{{ item.domain_txt_value }}"
         account_email: "{{ acme_cf_api_email }}"
         api_token: "{{ acme_cf_api_token }}"
-        state: present
+        state: absent
         solo: false
       when:
         - item.alias_enabled
@@ -21,7 +21,7 @@
         label: "{{ item.domain }}"
       run_once: true
 
-    - name: Create TXT record using alias on Cloudflare (wildcard).
+    - name: Delete TXT record using alias on Cloudflare (wildcard).
       community.general.cloudflare_dns:
         zone: "{{ item.alias_zone }}"
         record: "{{ item.alias_record }}"
@@ -29,7 +29,7 @@
         value: "{{ item.domain_wildcard_txt_value }}"
         account_email: "{{ acme_cf_api_email }}"
         api_token: "{{ acme_cf_api_token }}"
-        state: present
+        state: absent
         solo: false
       when:
         - item.alias_enabled
@@ -39,10 +39,10 @@
         label: "{{ item.domain }}"
       run_once: true
 
-- name: Create TXT records for non-delegated domains.
+- name: Delete TXT records for non-delegated domains.
   block:
 
-    - name: Create TXT record on Cloudflare (base).
+    - name: Delete TXT record on Cloudflare (base).
       community.general.cloudflare_dns:
         zone: "{{ item.domain }}"
         record: "_acme-challenge"
@@ -50,7 +50,7 @@
         value: "{{ item.domain_txt_value }}"
         account_email: "{{ acme_cf_api_email }}"
         api_token: "{{ acme_cf_api_token }}"
-        state: present
+        state: absent
         solo: false
       when:
         - not item.alias_enabled
@@ -60,7 +60,7 @@
         label: "{{ item.domain }}"
       run_once: true
 
-    - name: Create TXT record on Cloudflare (wildcard).
+    - name: Delete TXT record on Cloudflare (wildcard).
       community.general.cloudflare_dns:
         zone: "{{ item.domain }}"
         record: "_acme-challenge"
@@ -68,7 +68,7 @@
         value: "{{ item.domain_wildcard_txt_value }}"
         account_email: "{{ acme_cf_api_email }}"
         api_token: "{{ acme_cf_api_token }}"
-        state: present
+        state: absent
         solo: false
       when:
         - not item.alias_enabled

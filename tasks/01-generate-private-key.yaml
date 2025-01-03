@@ -1,16 +1,23 @@
 ---
 
-- name: Generate an OpenSSL RSA 4096 private key for account for {{ acme_domain }}.
+- name: Generate an OpenSSL RSA 4096 private key for accounts.
+  become: true
   community.crypto.openssl_privatekey:
-    path: "{{ acme_private_account_key_dir }}"
+    path: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_account_private.key"
     size: 4096
     type: RSA
+  loop: "{{ acme_domains }}"
+  loop_control:
+    label: "{{ item.domain }}"
   register: acme_account_private_key_results
   run_once: true
 
 - name: Debug out the generated account key.
   ansible.builtin.debug:
     msg:
-      - "The private key for Letsencrypt account is generated at {{ acme_account_private_key_results.filename }}."
+      - "The private key for Letsencrypt account is generated at {{ item.filename }}."
+  loop: "{{ acme_account_private_key_results.results }}"
+  loop_control:
+    label: "{{ item.item.domain }}"
   run_once: true
   tags: [debug]

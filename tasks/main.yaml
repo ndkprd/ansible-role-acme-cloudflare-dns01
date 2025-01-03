@@ -18,8 +18,11 @@
 - name: Validate DNS challenge.
   ansible.builtin.import_tasks: 05-validate-dns-challenge.yaml
 
+- name: Celanup TXT record on Cloudflare.
+  ansible.builtin.import_tasks: 06-cleanup-txt-record.yaml
+
 - name: Generate PKCS#12 certificates.
-  ansible.builtin.import_tasks: 06-generate-p12.yaml
+  ansible.builtin.import_tasks: 07-generate-p12.yaml
 
 - name: Run post-tasks.
   ansible.builtin.import_tasks: 99-post-task.yaml
