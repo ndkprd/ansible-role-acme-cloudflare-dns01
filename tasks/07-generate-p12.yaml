@@ -1,0 +1,26 @@
+---
+
+- name: Generate PKCS#12 certificate.
+  become: true
+  community.crypto.openssl_pkcs12:
+    action: export
+    path: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}.p12"
+    friendly_name: "{{ item.domain }}"
+    privatekey_path: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_cert_private.key"
+    certificate_path: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_fullchain.crt"
+    state: present
+  run_once: true
+  loop: "{{ _challenge_materials }}"
+  loop_control:
+    label: "{{ item.domain }}"
+
+- name: Debug the PKCS#12 certificate file location.
+  ansible.builtin.debug:
+    msg:
+      - "Cert file: {{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}.p12"
+      - "Fullchain cert file: {{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_fullchain.crt"
+  loop: "{{ _challenge_materials }}"
+  loop_control:
+    label: "{{ item.domain }}"
+  run_once: true
+  tags: [debug]

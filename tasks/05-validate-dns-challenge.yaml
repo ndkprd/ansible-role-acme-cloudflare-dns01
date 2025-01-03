@@ -3,46 +3,30 @@
 - name: Wait for 30 seconds for domain propagation.
   ansible.builtin.pause:
     seconds: 30
-  when:
-    acme_domain_txt_value is defined or acme_domain_wildcard_txt_value is defined
   run_once: true
 
-- name: Validate challenge and retrieve the cert and intermediate certificate for {{ acme_domain }}.
+- name: Validate challenge and retrieve the cert and intermediate certificates.
+  become: true
   community.crypto.acme_certificate:
-    account_key_src: "{{ acme_private_account_key_dir }}"
+    account_key_src: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_account_private.key"
     account_email: "{{ acme_account_email }}"
-    src: "{{ acme_csr_dir }}"
-    cert: "{{ acme_cert_dir }}"
-    fullchain: "{{ acme_cert_fullchain_dir }}"
-    chain: "{{ acme_cert_intermediate_dir }}"
+    src: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}.csr"
+    cert: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}.crt"
+    fullchain: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_fullchain.crt"
+    chain: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_intermediate.crt"
     challenge: dns-01
     acme_directory: "{{ acme_server_dir }}"
     remaining_days: "{{ acme_remaining_days }}"
     acme_version: 2
-    data: "{{ acme_dns_challenge_results }}"
-  when:
-    acme_domain_txt_value is defined or acme_domain_wildcard_txt_value is defined
+    data: "{{ item.challenge_data }}"
+  when: |
+    (item.domain_txt_value | length) > 0 or
+    (item.domain_wildcard_txt_value | length) > 0
+  loop: "{{ _challenge_materials }}"
+  loop_control:
+    label: "{{ item.domain }}"
   register: validation_result
   retries: 5
   delay: 10
   until: validation_result is not failed
-  run_once: true
-
-- name: Cleanup TXT records.
-  community.general.cloudflare_dns:
-    zone: "{{ acme_cf_alias_zone }}"
-    record: "{{ acme_cf_alias_record }}"
-    type: TXT
-    value: "{{ item }}"
-    account_email: "{{ acme_cf_api_email }}"
-    # account_api_key: "{{ acme_cf_api_token }}"
-    api_token: "{{ acme_cf_api_token }}"
-    state: absent
-    solo: false
-  when:
-    - acme_cf_use_alias
-    - acme_domain_txt_value is defined or acme_domain_wildcard_txt_value is defined
-  loop:
-    - "{{ acme_domain_txt_value }}"
-    - "{{ acme_domain_wildcard_txt_value }}"
   run_once: true
