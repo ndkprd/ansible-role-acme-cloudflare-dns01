@@ -1,7 +1,6 @@
 ---
 
 - name: Create a challenge for the wildcard domain using account key file.
-  # become: true
   community.crypto.acme_certificate:
     account_key_src: "files/{{ item.domain }}_account_private.key"
     account_email: "{{ acme_account_email }}"
@@ -50,15 +49,6 @@
   loop: "{{ acme_dns_challenge_results.results }}"
   loop_control:
     label: "{{ item.item.domain }}"
-
-# - name: Debug out the challenge value.
-#   ansible.builtin.debug:
-#     msg:
-#       - "acme_domain_txt_value: {{ acme_domain_txt_value }}"
-#       - "acme_domain_wildcard_txt_value: {{ acme_domain_wildcard_txt_value }}"
-#   when:
-#     - acme_dns_challenge_results.challenge_data is defined
-#   run_once: true
 
 - name: Debug out the constructed list.
   ansible.builtin.debug:

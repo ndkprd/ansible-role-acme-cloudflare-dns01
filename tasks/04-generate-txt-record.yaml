@@ -20,6 +20,7 @@
       loop_control:
         label: "{{ item.domain }}"
       run_once: true
+      register: base_txt_generate_results
 
     - name: Create TXT record using alias on Cloudflare (wildcard).
       community.general.cloudflare_dns:
@@ -38,6 +39,7 @@
       loop_control:
         label: "{{ item.domain }}"
       run_once: true
+      register: wildcard_txt_generate_results
 
 - name: Create TXT records for non-delegated domains.
   block:
@@ -59,6 +61,7 @@
       loop_control:
         label: "{{ item.domain }}"
       run_once: true
+      register: base_txt_generate_results
 
     - name: Create TXT record on Cloudflare (wildcard).
       community.general.cloudflare_dns:
@@ -77,3 +80,4 @@
       loop_control:
         label: "{{ item.domain }}"
       run_once: true
+      register: wildcard_txt_generate_results

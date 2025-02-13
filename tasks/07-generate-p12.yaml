@@ -1,7 +1,6 @@
 ---
 
 - name: Generate PKCS#12 certificate.
-  # become: true
   community.crypto.openssl_pkcs12:
     action: export
     path: "files/{{ item.domain }}.p12"

@@ -1,7 +1,6 @@
 ---
 
 - name: Generate an OpenSSL RSA 4096 private key for CSRs.
-  # become: true
   community.crypto.openssl_privatekey:
     path: "files/{{ item.domain }}_cert_private.key"
     size: 4096
@@ -23,7 +22,6 @@
   tags: [debug]
 
 - name: Generate the CSRs.
-  # become: true
   community.crypto.openssl_csr:
     path: "files/{{ item.domain }}.csr"
     privatekey_path: "files/{{ item.domain }}_cert_private.key"

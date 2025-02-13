@@ -8,7 +8,6 @@
   run_once: true
 
 - name: Generate an OpenSSL RSA 4096 private key for accounts.
-  # become: true
   community.crypto.openssl_privatekey:
     path: "files/{{ item.domain }}_account_private.key"
     size: 4096

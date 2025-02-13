@@ -1,12 +1,14 @@
 ---
 
-# - name: Wait for 30 seconds for domain propagation.
-#   ansible.builtin.pause:
-#     seconds: 30
-#   run_once: true
+- name: Wait for 30 seconds for domain propagation.
+  ansible.builtin.pause:
+    seconds: 30
+  run_once: true
+  when: |
+    base_txt_generate_results is changed or
+    base_txt_generate_results is changed
 
 - name: Validate challenge and retrieve the cert and intermediate certificates.
-  # become: true
   community.crypto.acme_certificate:
     account_key_src: "files/{{ item.domain }}_account_private.key"
     account_email: "{{ acme_account_email }}"
