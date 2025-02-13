@@ -1,19 +1,19 @@
 ---
 
-- name: Wait for 30 seconds for domain propagation.
-  ansible.builtin.pause:
-    seconds: 30
-  run_once: true
+# - name: Wait for 30 seconds for domain propagation.
+#   ansible.builtin.pause:
+#     seconds: 30
+#   run_once: true
 
 - name: Validate challenge and retrieve the cert and intermediate certificates.
-  become: true
+  # become: true
   community.crypto.acme_certificate:
-    account_key_src: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_account_private.key"
+    account_key_src: "files/{{ item.domain }}_account_private.key"
     account_email: "{{ acme_account_email }}"
-    src: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}.csr"
-    cert: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}.crt"
-    fullchain: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_fullchain.crt"
-    chain: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_intermediate.crt"
+    src: "files/{{ item.domain }}.csr"
+    cert: "files/{{ item.domain }}.crt"
+    fullchain: "files/{{ item.domain }}_fullchain.crt"
+    chain: "files/{{ item.domain }}_intermediate.crt"
     challenge: dns-01
     acme_directory: "{{ acme_server_dir }}"
     remaining_days: "{{ acme_remaining_days }}"
@@ -27,6 +27,6 @@
     label: "{{ item.domain }}"
   register: validation_result
   retries: 5
-  delay: 10
+  delay: 30
   until: validation_result is not failed
   run_once: true

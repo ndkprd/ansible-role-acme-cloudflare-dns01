@@ -40,7 +40,6 @@ localhost
         alias_enabled: true
         alias_zone: "example.xyz"
         alias_record: "_acme-challenge.acme"
-    acme_files_dir: "/tmp"
     acme_server_dir: "https://acme-staging-v02.api.letsencrypt.org/directory"
     acme_remaining_days: 30
     acme_account_email: "contact@example.com"
@@ -52,7 +51,7 @@ localhost
 
 ```
 
-The generated files will be located in `/tmp/{{ acme_domains[].domain` directory.
+The generated files will be located in inside the playbook `./files` directory, so don't forget to move them out if you want to.
 
 ## Notes
 

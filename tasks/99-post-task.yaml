@@ -3,12 +3,12 @@
 - name: Debug certificate files location.
   ansible.builtin.debug:
     msg:
-      - "Private key file: {{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_cert_private.key"
-      - "CSR file: {{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}.csr."
-      - "Cert file (.crt): {{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}.crt."
-      - "Cert file (.p12): {{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}.p12."
-      - "Intermediate file: {{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_intermediate.crt."
-      - "Fullchain cert file: {{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_fullchain.crt."
+      - "Private key file: files/{{ item.domain }}_cert_private.key"
+      - "CSR file: files/{{ item.domain }}.csr."
+      - "Cert file (.crt): files/{{ item.domain }}.crt."
+      - "Cert file (.p12): files/{{ item.domain }}.p12."
+      - "Intermediate file: files/{{ item.domain }}_intermediate.crt."
+      - "Fullchain cert file: files/{{ item.domain }}_fullchain.crt."
   loop: "{{ _challenge_materials }}"
   loop_control:
     label: "{{ item.domain }}"

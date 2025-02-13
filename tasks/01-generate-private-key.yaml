@@ -1,9 +1,16 @@
 ---
 
+- name: Make sure files directory exists.
+  ansible.builtin.file:
+    path: "./files"
+    state: directory
+    mode: "0755"
+  run_once: true
+
 - name: Generate an OpenSSL RSA 4096 private key for accounts.
-  become: true
+  # become: true
   community.crypto.openssl_privatekey:
-    path: "{{ acme_files_dir }}/{{ item.domain }}/{{ item.domain }}_account_private.key"
+    path: "files/{{ item.domain }}_account_private.key"
     size: 4096
     type: RSA
   loop: "{{ acme_domains }}"
@@ -20,4 +27,5 @@
   loop_control:
     label: "{{ item.item.domain }}"
   run_once: true
+  delegate_to: "{{ fortiweb_certificate_bastion }}"
   tags: [debug]

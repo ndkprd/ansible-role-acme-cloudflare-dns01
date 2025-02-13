@@ -1,7 +1,7 @@
 ---
 
-- name: Run pre-tasks.
-  ansible.builtin.import_tasks: 00-pre-task.yaml
+# - name: Run pre-tasks.
+#   ansible.builtin.import_tasks: 00-pre-task.yaml
 
 - name: Generate private key.
   ansible.builtin.import_tasks: 01-generate-private-key.yaml
