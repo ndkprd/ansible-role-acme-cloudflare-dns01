@@ -25,7 +25,7 @@
   community.crypto.openssl_csr:
     path: "files/{{ item.domain }}.csr"
     privatekey_path: "files/{{ item.domain }}_cert_private.key"
-    common_name: "{{ item.domain }}"
+    common_name: "*.{{ item.domain }}"
     email_address: "{{ acme_account_email }}"
     subject_alt_name: |
       {{
