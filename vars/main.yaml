@@ -1,3 +1,3 @@
 ---
 
-acme_tmp_dir: /tmp/acme_cf
+cf_acme_tmp_dir: /tmp/acme_cf

@@ -10,12 +10,12 @@
 
 - name: Validate challenge and retrieve the cert and intermediate certificates.
   community.crypto.acme_certificate:
-    account_key_src: "{{ acme_tmp_dir }}/{{ item.domain }}_account_private.key"
+    account_key_src: "{{ cf_acme_tmp_dir }}/{{ item.domain }}_account_private.key"
     account_email: "{{ acme_account_email }}"
-    src: "{{ acme_tmp_dir }}/{{ item.domain }}.csr"
-    cert: "{{ acme_tmp_dir }}/{{ item.domain }}.crt"
-    fullchain: "{{ acme_tmp_dir }}/{{ item.domain }}_fullchain.crt"
-    chain: "{{ acme_tmp_dir }}/{{ item.domain }}_intermediate.crt"
+    src: "{{ cf_acme_tmp_dir }}/{{ item.domain }}.csr"
+    cert: "{{ cf_acme_tmp_dir }}/{{ item.domain }}.crt"
+    fullchain: "{{ cf_acme_tmp_dir }}/{{ item.domain }}_fullchain.crt"
+    chain: "{{ cf_acme_tmp_dir }}/{{ item.domain }}_intermediate.crt"
     challenge: dns-01
     acme_directory: "{{ acme_server_dir }}"
     remaining_days: "{{ acme_remaining_days }}"

@@ -2,17 +2,17 @@
 
 - name: Make sure files directory exists.
   ansible.builtin.file:
-    path: "{{ acme_tmp_dir }}"
+    path: "{{ cf_acme_tmp_dir }}"
     state: directory
     mode: "755"
   run_once: true
 
 - name: Generate an OpenSSL RSA 4096 private key for accounts.
   community.crypto.openssl_privatekey:
-    path: "{{ acme_tmp_dir }}/{{ item.domain }}_account_private.key"
+    path: "{{ cf_acme_tmp_dir }}/{{ item.domain }}_account_private.key"
     size: 4096
     type: RSA
-  loop: "{{ acme_domains }}"
+  loop: "{{ cf_acme_domains }}"
   loop_control:
     label: "{{ item.domain }}"
   register: acme_account_private_key_results
