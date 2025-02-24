@@ -2,7 +2,7 @@
 
 - name: Generate an OpenSSL RSA 4096 private key for CSRs.
   community.crypto.openssl_privatekey:
-    path: "files/{{ item.domain }}_cert_private.key"
+    path: "{{ acme_tmp_dir }}/{{ item.domain }}_cert_private.key"
     size: 4096
     type: RSA
   loop: "{{ acme_domains }}"
@@ -23,8 +23,8 @@
 
 - name: Generate the CSRs.
   community.crypto.openssl_csr:
-    path: "files/{{ item.domain }}.csr"
-    privatekey_path: "files/{{ item.domain }}_cert_private.key"
+    path: "{{ acme_tmp_dir }}/{{ item.domain }}.csr"
+    privatekey_path: "{{ acme_tmp_dir }}/{{ item.domain }}_cert_private.key"
     common_name: "*.{{ item.domain }}"
     email_address: "{{ acme_account_email }}"
     subject_alt_name: |

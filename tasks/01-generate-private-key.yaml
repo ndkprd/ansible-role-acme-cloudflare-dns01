@@ -2,14 +2,14 @@
 
 - name: Make sure files directory exists.
   ansible.builtin.file:
-    path: "./files"
+    path: "{{ acme_tmp_dir }}"
     state: directory
-    mode: "0755"
+    mode: "755"
   run_once: true
 
 - name: Generate an OpenSSL RSA 4096 private key for accounts.
   community.crypto.openssl_privatekey:
-    path: "files/{{ item.domain }}_account_private.key"
+    path: "{{ acme_tmp_dir }}/{{ item.domain }}_account_private.key"
     size: 4096
     type: RSA
   loop: "{{ acme_domains }}"
@@ -20,11 +20,9 @@
 
 - name: Debug out the generated account key.
   ansible.builtin.debug:
-    msg:
-      - "The private key for Letsencrypt account is generated at {{ item.filename }}."
+    msg: "The private key for Letsencrypt account is generated at {{ item.filename }}."
   loop: "{{ acme_account_private_key_results.results }}"
   loop_control:
     label: "{{ item.item.domain }}"
   run_once: true
-  delegate_to: "{{ fortiweb_certificate_bastion }}"
   tags: [debug]

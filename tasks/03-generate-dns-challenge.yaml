@@ -2,10 +2,10 @@
 
 - name: Create a challenge for the wildcard domain using account key file.
   community.crypto.acme_certificate:
-    account_key_src: "files/{{ item.domain }}_account_private.key"
+    account_key_src: "{{ acme_tmp_dir }}/{{ item.domain }}_account_private.key"
     account_email: "{{ acme_account_email }}"
-    src: "files/{{ item.domain }}.csr"
-    cert: "files/{{ item.domain }}.crt"
+    src: "{{ acme_tmp_dir }}/{{ item.domain }}.csr"
+    cert: "{{ acme_tmp_dir }}/{{ item.domain }}.crt"
     challenge: "dns-01"
     acme_directory: "{{ acme_server_dir }}"
     remaining_days: "{{ acme_remaining_days }}"

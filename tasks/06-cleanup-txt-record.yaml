@@ -2,7 +2,6 @@
 
 - name: Delete TXT records for delegated domains.
   block:
-
     - name: Delete TXT record using alias on Cloudflare (base).
       community.general.cloudflare_dns:
         zone: "{{ item.alias_zone }}"
@@ -20,7 +19,6 @@
       loop_control:
         label: "{{ item.domain }}"
       run_once: true
-      ignore_errors: true
 
     - name: Delete TXT record using alias on Cloudflare (wildcard).
       community.general.cloudflare_dns:
@@ -39,11 +37,9 @@
       loop_control:
         label: "{{ item.domain }}"
       run_once: true
-      ignore_errors: true
 
 - name: Delete TXT records for non-delegated domains.
   block:
-
     - name: Delete TXT record on Cloudflare (base).
       community.general.cloudflare_dns:
         zone: "{{ item.domain }}"
@@ -61,7 +57,6 @@
       loop_control:
         label: "{{ item.domain }}"
       run_once: true
-      ignore_errors: true
 
     - name: Delete TXT record on Cloudflare (wildcard).
       community.general.cloudflare_dns:
@@ -80,4 +75,3 @@
       loop_control:
         label: "{{ item.domain }}"
       run_once: true
-      ignore_errors: true
