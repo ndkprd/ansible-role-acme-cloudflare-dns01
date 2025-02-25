@@ -30,8 +30,8 @@ localhost
   gather_facts: false
   connection: local
   vars:
-    acme_cert_country_id: "XX"
-    acme_cert_org_name: "EXAMPLE INC."
+    cf_acme_certcountry_id: "XX"
+    cf_acme_certorg_name: "EXAMPLE INC."
     acme_domains:
       # without CNAME delegation
       - domain: "example0.com"
@@ -43,8 +43,8 @@ localhost
     acme_server_dir: "https://acme-staging-v02.api.letsencrypt.org/directory"
     acme_remaining_days: 30
     acme_account_email: "contact@example.com"
-    acme_cf_api_email: "contact@example.com"
-    acme_cf_api_token: "{{lookup('ansible.builtin.env', 'CF_API_TOKEN') }}"
+    cf_acme_api_email: "contact@example.com"
+    cf_acme_api_token: "{{lookup('ansible.builtin.env', 'CF_API_TOKEN') }}"
 
   roles:
     - ndkprd.acme_cloudflare_dns01
