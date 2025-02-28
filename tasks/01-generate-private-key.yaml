@@ -21,7 +21,7 @@
 - name: Debug out the generated account key.
   ansible.builtin.debug:
     msg: "The private key for Letsencrypt account is generated at {{ item.filename }}."
-  loop: "{{ acme_account_private_key_results.results }}"
+  loop: "{{ cf_acme_account_private_key_results.results }}"
   loop_control:
     label: "{{ item.item.domain }}"
   run_once: true

@@ -16,7 +16,7 @@
     msg:
       - "The private key for the CSR is generated at {{ item.filename }}."
   run_once: true
-  loop: "{{ acme_csr_private_key_results.results }}"
+  loop: "{{ cf_acme_csr_private_key_results.results }}"
   loop_control:
     label: "{{ item.item.domain }}"
   tags: [debug]
@@ -26,7 +26,7 @@
     path: "{{ cf_acme_tmp_dir }}/{{ item.domain }}.csr"
     privatekey_path: "{{ cf_acme_tmp_dir }}/{{ item.domain }}_cert_private.key"
     common_name: "*.{{ item.domain }}"
-    email_address: "{{ acme_account_email }}"
+    email_address: "{{ cf_acme_account_email }}"
     subject_alt_name: |
       {{
       [item.domain, '*.' + item.domain]
@@ -44,7 +44,7 @@
     msg:
       - "The CSR is generated at {{ item.filename }}."
   run_once: true
-  loop: "{{ acme_csr_generate_result.results }}"
+  loop: "{{ cf_acme_csr_generate_result.results }}"
   loop_control:
     label: "{{ item.item.domain }}"
   tags: [debug]

@@ -3,25 +3,25 @@
 - name: Create a challenge for the wildcard domain using account key file.
   community.crypto.acme_certificate:
     account_key_src: "{{ cf_acme_tmp_dir }}/{{ item.domain }}_account_private.key"
-    account_email: "{{ acme_account_email }}"
+    account_email: "{{ cf_acme_account_email }}"
     src: "{{ cf_acme_tmp_dir }}/{{ item.domain }}.csr"
     cert: "{{ cf_acme_tmp_dir }}/{{ item.domain }}.crt"
     challenge: "dns-01"
-    acme_directory: "{{ acme_server_dir }}"
-    remaining_days: "{{ acme_remaining_days }}"
+    acme_directory: "{{ cf_acme_server_dir }}"
+    remaining_days: "{{ cf_acme_remaining_days }}"
     acme_version: 2
     terms_agreed: true
   loop: "{{ cf_acme_domains }}"
   loop_control:
     label: "{{ item.domain }}"
-  register: acme_dns_challenge_results
+  register: cf_acme_dns_challenge_results
   run_once: true
 
 - name: Debug dns_challenge variable.
   ansible.builtin.debug:
     var: item
   run_once: true
-  loop: "{{ acme_dns_challenge_results.results }}"
+  loop: "{{ cf_acme_dns_challenge_results.results }}"
   loop_control:
     label: "{{ item.item.domain }}"
   tags: [debug]
@@ -46,7 +46,7 @@
         ]
       }}
   run_once: true
-  loop: "{{ acme_dns_challenge_results.results }}"
+  loop: "{{ cf_acme_dns_challenge_results.results }}"
   loop_control:
     label: "{{ item.item.domain }}"
 
