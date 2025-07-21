@@ -9,7 +9,6 @@
         record: "{{ item.alias_record }}"
         type: TXT
         value: "{{ item.domain_txt_value }}"
-        account_email: "{{ cf_acme_api_email }}"
         api_token: "{{ cf_acme_api_token }}"
         state: present
         solo: false
@@ -28,7 +27,6 @@
         record: "{{ item.alias_record }}"
         type: TXT
         value: "{{ item.domain_wildcard_txt_value }}"
-        account_email: "{{ cf_acme_api_email }}"
         api_token: "{{ cf_acme_api_token }}"
         state: present
         solo: false
@@ -50,7 +48,6 @@
         record: "_acme-challenge"
         type: TXT
         value: "{{ item.domain_txt_value }}"
-        account_email: "{{ cf_acme_api_email }}"
         api_token: "{{ cf_acme_api_token }}"
         state: present
         solo: false
@@ -69,7 +66,6 @@
         record: "_acme-challenge"
         type: TXT
         value: "{{ item.domain_wildcard_txt_value }}"
-        account_email: "{{ cf_acme_api_email }}"
         api_token: "{{ cf_acme_api_token }}"
         state: present
         solo: false
