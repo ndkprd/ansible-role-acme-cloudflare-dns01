@@ -2,27 +2,55 @@
 
 - name: Make sure files directory exists.
   ansible.builtin.file:
-    path: "{{ cf_acme_tmp_dir }}"
+    path: "{{ acme_cf_files_dir }}/{{ item.domain }}"
     state: directory
     mode: "755"
+  loop: "{{ acme_cf_domains }}"
+  loop_control:
+    label: "{{ item.domain }}"
   run_once: true
+
+# Generate account key for Let's Encrypt DNS challenge.
 
 - name: Generate an OpenSSL RSA 4096 private key for accounts.
   community.crypto.openssl_privatekey:
-    path: "{{ cf_acme_tmp_dir }}/{{ item.domain }}_account_private.key"
+    path: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.account.private.key"
     size: 4096
     type: RSA
-  loop: "{{ cf_acme_domains }}"
+  loop: "{{ acme_cf_domains }}"
   loop_control:
     label: "{{ item.domain }}"
-  register: acme_account_private_key_results
+  register: acme_cf_account_private_key_results
   run_once: true
 
 - name: Debug out the generated account key.
   ansible.builtin.debug:
     msg: "The private key for Letsencrypt account is generated at {{ item.filename }}."
-  loop: "{{ cf_acme_account_private_key_results.results }}"
+  loop: "{{ acme_cf_account_private_key_results.results }}"
   loop_control:
     label: "{{ item.item.domain }}"
   run_once: true
+  tags: [debug]
+
+# Generate private key for CSRs.
+
+- name: Generate an OpenSSL RSA 4096 private key for CSRs.
+  community.crypto.openssl_privatekey:
+    path: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.private.key"
+    size: 4096
+    type: RSA
+  loop: "{{ acme_cf_domains }}"
+  loop_control:
+    label: "{{ item.domain }}"
+  register: acme_cf_csr_private_key_results
+  run_once: true
+
+- name: Debug out the generated CSR private key.
+  ansible.builtin.debug:
+    msg:
+      - "The private key for the CSR is generated at {{ item.filename }}."
+  run_once: true
+  loop: "{{ acme_cf_csr_private_key_results.results }}"
+  loop_control:
+    label: "{{ item.item.domain }}"
   tags: [debug]

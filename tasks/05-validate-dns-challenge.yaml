@@ -1,24 +1,16 @@
 ---
 
-- name: Wait for 30 seconds for domain propagation.
-  ansible.builtin.pause:
-    seconds: 30
-  run_once: true
-  when: |
-    base_txt_generate_results is changed or
-    base_txt_generate_results is changed
-
 - name: Validate challenge and retrieve the cert and intermediate certificates.
   community.crypto.acme_certificate:
-    account_key_src: "{{ cf_acme_tmp_dir }}/{{ item.domain }}_account_private.key"
-    account_email: "{{ cf_acme_account_email }}"
-    src: "{{ cf_acme_tmp_dir }}/{{ item.domain }}.csr"
-    cert: "{{ cf_acme_tmp_dir }}/{{ item.domain }}.crt"
-    fullchain: "{{ cf_acme_tmp_dir }}/{{ item.domain }}_fullchain.crt"
-    chain: "{{ cf_acme_tmp_dir }}/{{ item.domain }}_intermediate.crt"
+    account_key_src: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.account.private.key"
+    account_email: "{{ acme_cf_account_email }}"
+    src: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.csr"
+    cert: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.crt"
+    fullchain: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.fullchain.crt"
+    chain: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.intermediate.crt"
     challenge: dns-01
-    acme_directory: "{{ cf_acme_server_dir }}"
-    remaining_days: "{{ cf_acme_remaining_days }}"
+    acme_directory: "{{ acme_cf_server_dir }}"
+    remaining_days: "{{ acme_cf_remaining_days }}"
     acme_version: 2
     data: "{{ item.challenge_data }}"
   when: |

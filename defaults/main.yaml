@@ -1,18 +1,25 @@
 ---
 
 # details needed for ACME challenge.
-cf_acme_domains: []
+acme_cf_domains: []
+# acme_cf_domains:
+#   # without CNAME delegation
+#   - domain: "example0.com"
+#   # if using CNAME delegation
+#   - domain: "example1.com"
+#     alias_enabled: true
+#     alias_zone: "example.xyz"
+#     alias_record: "_acme-challenge.acme"
 
-cf_acme_files_dir: "/tmp"
-cf_acme_server_dir: "https://acme-staging-v02.api.letsencrypt.org/directory"
-cf_acme_remaining_days: "30"
-cf_acme_account_email: ""
+acme_cf_files_dir: "/tmp/acme_cf"
+acme_cf_server_dir: "https://acme-staging-v02.api.letsencrypt.org/directory"
+acme_cf_remaining_days: "30"
+acme_cf_account_email: ""
 
 # details needed for Cloudflare API authentication.
-cf_acme_api_email: "{{ cf_acme_api_email | default(lookup('ansible.builtin.env', 'CF_API_EMAIL')) }}"
-cf_acme_api_token: "{{ cf_acme_api_token | default(lookup('ansible.builtin.env', 'CF_API_TOKEN')) }}"
+acme_cf_api_token: "{{ acme_cf_api_token | default(lookup('ansible.builtin.env', 'CLOUDFLARE_API_TOKEN')) }}"
 
 # details needed if you want to use an alias/CNAME delegation.
-cf_acme_use_alias: false
-cf_acme_alias_zone: "{{ cf_acme_alias_zone | default(omit) }}"
-cf_acme_alias_record: "{{ cf_acme_alias_record | default(omit) }}"
+acme_cf_use_alias: false
+acme_cf_alias_zone: "{{ acme_cf_alias_zone | default(omit) }}"
+acme_cf_alias_record: "{{ acme_cf_alias_record | default(omit) }}"

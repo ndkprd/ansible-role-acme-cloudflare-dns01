@@ -2,7 +2,7 @@
 
 ## Description
 
-Ansible role to generate (multiple) base and wildcard SSL certificate(s) using DNS-01 challenge via Cloudflare. It will t
+Ansible role to generate (multiple) base and wildcard SSL certificate(s) using DNS-01 challenge via Cloudflare.
 
 ## Usage
 
@@ -30,9 +30,9 @@ localhost
   gather_facts: false
   connection: local
   vars:
-    cf_acme_certcountry_id: "XX"
-    cf_acme_certorg_name: "EXAMPLE INC."
-    acme_domains:
+    acme_cf_certcountry_id: "XX"
+    acme_cf_certorg_name: "EXAMPLE INC."
+    acme_cf_domains:
       # without CNAME delegation
       - domain: "example0.com"
       # if using CNAME delegation
@@ -40,18 +40,18 @@ localhost
         alias_enabled: true
         alias_zone: "example.xyz"
         alias_record: "_acme-challenge.acme"
-    acme_server_dir: "https://acme-staging-v02.api.letsencrypt.org/directory"
-    acme_remaining_days: 30
-    acme_account_email: "contact@example.com"
-    cf_acme_api_email: "contact@example.com"
-    cf_acme_api_token: "{{lookup('ansible.builtin.env', 'CF_API_TOKEN') }}"
+    acme_cf_server_dir: "https://acme-staging-v02.api.letsencrypt.org/directory"
+    acme_cf_remaining_days: 30
+    acme_cf_account_email: "contact@example.com"
+    acme_cf_api_token: "{{lookup('ansible.builtin.env', 'CF_API_TOKEN') }}"
 
   roles:
     - ndkprd.acme_cloudflare_dns01
 
 ```
 
-The generated files will be located in inside the playbook `./files` directory, so don't forget to move them out if you want to.
+The generated files will be located in the dir you set in 
+`acme_cf_files_dir` var, with the default in `/tmp/acme_cf`.
 
 ## Notes
 
@@ -59,8 +59,8 @@ There's some tasks that is tagged with `debug` tag that is basically just print 
 
 ## TODO
 
-- ~~add support for non-aliases/CNAME delegation;~~
-- change input from string to list so it can be used for multiple domains at once.
+- [x] add support for non-aliases/CNAME delegation;
+- [x] change input from string to list so it can be used for multiple domains at once.
 
 ## License
 

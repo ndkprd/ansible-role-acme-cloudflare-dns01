@@ -8,7 +8,7 @@
         zone: "{{ item.alias_zone }}"
         record: "{{ item.alias_record }}"
         type: TXT
-        api_token: "{{ cf_acme_api_token }}"
+        api_token: "{{ acme_cf_api_token }}"
         state: absent
       when:
         - item.alias_enabled | default(false)
@@ -23,7 +23,7 @@
         zone: "{{ item.alias_zone }}"
         record: "{{ item.alias_record }}"
         type: TXT
-        api_token: "{{ cf_acme_api_token }}"
+        api_token: "{{ acme_cf_api_token }}"
         state: absent
       when:
         - item.alias_enabled | default(false)
@@ -40,7 +40,7 @@
         zone: "{{ item.domain }}"
         record: "_acme-challenge"
         type: TXT
-        api_token: "{{ cf_acme_api_token }}"
+        api_token: "{{ acme_cf_api_token }}"
         state: absent
       when:
         - not item.alias_enabled
@@ -55,7 +55,7 @@
         zone: "{{ item.domain }}"
         record: "_acme-challenge"
         type: TXT
-        api_token: "{{ cf_acme_api_token }}"
+        api_token: "{{ acme_cf_api_token }}"
         state: absent
       when:
         - not item.alias_enabled | default(false)
