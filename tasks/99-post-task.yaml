@@ -1,5 +1,39 @@
 ---
 
+- name: Generate checksum for the files.
+  vars:
+    _file_suffixes:
+      - "private.key"
+      - "csr"
+      - "crt"
+      - "p12"
+      - "intermediate.crt"
+      - "fullchain.crt"
+  ansible.builtin.stat:
+    path: "{{ acme_cf_files_dir }}/{{ item[0].domain }}/{{ item[0].domain }}.{{ item[1] }}"
+    checksum_algorithm: sha256
+  loop: "{{ _challenge_materials | product(_file_suffixes) }}"
+  loop_control:
+    label: "{{ item[0].domain }}.{{ item[1] }}"
+  register: stat_results
+
+- name: Debug checksum variable.
+  ansible.builtin.debug:
+    var: stat_results
+
+- name: Assemble checksum manifests.
+  ansible.builtin.copy:
+    dest: "{{ acme_cf_files_dir }}/{{ item.domain }}/checksums.sha256"
+    content: |
+      {% for s in stat_results.results | selectattr("item[0].domain", "equalto", item.domain) %}
+      {{ s.stat.checksum }} {{ s.stat.path | basename }}
+      {% endfor %}
+    mode: "0644"
+  loop: "{{ stat_results.results }}"
+  loop_control:
+    label: "{{ item.item[0].domain }}"
+  run_once: true
+
 - name: Debug certificate files location.
   ansible.builtin.debug:
     msg:

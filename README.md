@@ -2,14 +2,14 @@
 
 ## Description
 
-Ansible role to generate (multiple) base and wildcard SSL certificate(s) using DNS-01 challenge via Cloudflare.
+Ansible role to generate wildcard SSL certificates using DNS-01 challenge via Cloudflare.
 
 ## Usage
 
 ### Installation
 
 ```bash
-ansible-galaxy install ndkprd.acme_cloudflare_dns01
+ansible-galaxy install ndkprd.acme_cf
 ```
 
 ### Hosts Example
@@ -31,12 +31,12 @@ localhost
   connection: local
   vars:
     acme_cf_certcountry_id: "XX"
-    acme_cf_certorg_name: "EXAMPLE INC."
+    acme_cf_certorg_name: "Example Inc."
     acme_cf_domains:
       # without CNAME delegation
-      - domain: "example0.com"
+      - domain: "example.com"
       # if using CNAME delegation
-      - domain: "example1.com"
+      - domain: "example.com"
         alias_enabled: true
         alias_zone: "example.xyz"
         alias_record: "_acme-challenge.acme"
@@ -46,12 +46,11 @@ localhost
     acme_cf_api_token: "{{lookup('ansible.builtin.env', 'CF_API_TOKEN') }}"
 
   roles:
-    - ndkprd.acme_cloudflare_dns01
+    - ndkprd.acme_cf
 
 ```
 
-The generated files will be located in the dir you set in 
-`acme_cf_files_dir` var, with the default in `/tmp/acme_cf`.
+The generated files will be located in the dir you set in `acme_cf_files_dir` var, with the default being `/tmp/acme_cf`.
 
 ## Notes
 
@@ -60,7 +59,8 @@ There's some tasks that is tagged with `debug` tag that is basically just print 
 ## TODO
 
 - [x] add support for non-aliases/CNAME delegation;
-- [x] change input from string to list so it can be used for multiple domains at once.
+- [x] change input from string to list so it can be used for multiple domains at once;
+- [ ] Add checksums.
 
 ## License
 
