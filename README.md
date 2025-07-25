@@ -1,8 +1,8 @@
-# ansible-role-acme-cloudflare-dns01
+# ansible-role-acme-cf
 
 ## Description
 
-Ansible role to generate wildcard SSL certificates using DNS-01 challenge via Cloudflare.
+Ansible role to generate wildcard SSL certificates using DNS-01 challenge via [Cloudflare](https://cloudflare.com).
 
 ## Usage
 
