@@ -1,0 +1,39 @@
+---
+
+acme_cf_domains:
+  hosts:
+    dev.asdp.id:
+      domain: dev.asdp.id
+      domain_alias_enabled: true
+      domain_alias_zone: asdp.my.id
+      domain_alias_record: "_acme-challenge"
+    stg.asdp.id:
+      domain: stg.asdp.id
+      domain_alias_enabled: true
+      domain_alias_zone: asdp.my.id
+      domain_alias_record: "_acme-challenge"
+    devops.asdp.id:
+      domain: devops.asdp.id
+      domain_alias_enabled: true
+      domain_alias_zone: asdp.my.id
+      domain_alias_record: "_acme-challenge"
+    itops.asdp.id:
+      domain: itops.asdp.id
+      domain_alias_enabled: true
+      domain_alias_zone: asdp.my.id
+      domain_alias_record: "_acme-challenge"
+    asdp.io:
+      domain: asdp.io
+      domain_alias_enabled: true
+      domain_alias_zone: asdp.my.id
+      domain_alias_record: "_acme-challenge"
+    asdp.link:
+      domain: asdp.link
+      domain_alias_enabled: true
+      domain_alias_zone: asdp.my.id
+      domain_alias_record: "_acme-challenge"
+    asdp.my.id:
+      domain: asdp.my.id
+      domain_alias_enabled: true
+      domain_alias_zone: asdp.my.id
+      domain_alias_record: "_acme-challenge"

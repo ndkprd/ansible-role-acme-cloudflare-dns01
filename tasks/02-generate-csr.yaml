@@ -1,29 +1,22 @@
 ---
 
-- name: Generate the CSRs.
+- name: CSR | Generate the CSRs.
   community.crypto.openssl_csr:
-    path: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.csr"
-    privatekey_path: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.private.key"
-    common_name: "*.{{ item.domain }}"
+    path: "{{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.csr"
+    privatekey_path: "{{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.private.key"
+    common_name: "*.{{ domain }}"
     email_address: "{{ acme_cf_account_email }}"
     subject_alt_name: |
       {{
-      [item.domain, '*.' + item.domain]
+      [domain, '*.' + domain]
       | map('regex_replace', '^', 'DNS:')
       | list
       }}
-  loop: "{{ acme_cf_domains }}"
-  loop_control:
-    label: "{{ item.domain }}"
   run_once: true
   register: acme_cf_csr_generate_result
 
-- name: Debug out the generated CSR.
+- name: CSR | Debug out the generated CSR.
   ansible.builtin.debug:
     msg:
-      - "The CSR is generated at {{ item.filename }}."
-  run_once: true
-  loop: "{{ acme_cf_csr_generate_result.results }}"
-  loop_control:
-    label: "{{ item.item.domain }}"
+      - "The CSR is generated at {{ acme_cf_csr_generate_result.filename }}."
   tags: [debug]

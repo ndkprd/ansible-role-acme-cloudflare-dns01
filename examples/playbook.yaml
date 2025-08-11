@@ -1,0 +1,18 @@
+---
+
+- name: Generate SSL certificates using ACME DNS-01 challenge.
+  hosts: acme_cf_domains
+  connection: local
+  become: false
+  gather_facts: false
+  vars:
+    acme_cf_files_dir: "/home/ndkprd/.ssl/acme"
+    acme_cf_server_dir: "https://acme-staging-v02.api.letsencrypt.org/directory"
+    acme_cf_remaining_days: 30
+    acme_cf_account_email: andhika.pradana@asdp.id
+    acme_cf_api_token: "{{ lookup('ansible.builtin.env', 'CLOUDFLARE_API_TOKEN') }}"
+    acme_cf_alias_enabled: true
+    acme_cf_alias_zone: "asdp.my.id"
+    acme_cf_alias_record: "_acme-challenge"
+  roles:
+    - /home/ndkprd/devops/ansible/playbooks/asdp-ansible-ssl-certificate/roles/acme_cf

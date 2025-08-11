@@ -5,38 +5,30 @@
 
     - name: Create TXT record using alias on Cloudflare (base).
       community.general.cloudflare_dns:
-        zone: "{{ item.alias_zone }}"
-        record: "{{ item.alias_record }}"
+        zone: "{{ domain_alias_zone }}"
+        record: "{{ domain_alias_record }}"
         type: TXT
-        value: "{{ item.domain_txt_value }}"
+        value: "{{ __domain_txt_value }}"
         api_token: "{{ acme_cf_api_token }}"
         state: present
         solo: false
       when:
-        - item.alias_enabled | default(false)
-        - (item.domain_txt_value | length) > 0
-      loop: "{{ _challenge_materials }}"
-      loop_control:
-        label: "{{ item.domain }}"
-      run_once: true
+        - domain_alias_enabled | default(false)
+        - (__domain_txt_value | length) > 0
       register: base_txt_generate_results
 
     - name: Create TXT record using alias on Cloudflare (wildcard).
       community.general.cloudflare_dns:
-        zone: "{{ item.alias_zone }}"
-        record: "{{ item.alias_record }}"
+        zone: "{{ domain_alias_zone }}"
+        record: "{{ domain_alias_record }}"
         type: TXT
-        value: "{{ item.domain_wildcard_txt_value }}"
+        value: "{{ __domain_wildcard_txt_value }}"
         api_token: "{{ acme_cf_api_token }}"
         state: present
         solo: false
       when:
-        - item.alias_enabled | default(false)
-        - (item.domain_wildcard_txt_value | length) > 0
-      loop: "{{ _challenge_materials }}"
-      loop_control:
-        label: "{{ item.domain }}"
-      run_once: true
+        - domain_alias_enabled | default(false)
+        - (__domain_wildcard_txt_value | length) > 0
       register: wildcard_txt_generate_results
 
 - name: Create TXT records for non-delegated domains.
@@ -44,36 +36,28 @@
 
     - name: Create TXT record on Cloudflare (base).
       community.general.cloudflare_dns:
-        zone: "{{ item.domain }}"
+        zone: "{{ domain }}"
         record: "_acme-challenge"
         type: TXT
-        value: "{{ item.domain_txt_value }}"
+        value: "{{ __domain_txt_value }}"
         api_token: "{{ acme_cf_api_token }}"
         state: present
         solo: false
       when:
-        - not item.alias_enabled | default(false)
-        - (item.domain_txt_value | length) > 0
-      loop: "{{ _challenge_materials }}"
-      loop_control:
-        label: "{{ item.domain }}"
-      run_once: true
+        - not domain_alias_enabled | default(false)
+        - (__domain_txt_value | length) > 0
       register: base_txt_generate_results
 
     - name: Create TXT record on Cloudflare (wildcard).
       community.general.cloudflare_dns:
-        zone: "{{ item.domain }}"
+        zone: "{{ domain }}"
         record: "_acme-challenge"
         type: TXT
-        value: "{{ item.domain_wildcard_txt_value }}"
+        value: "{{ __domain_wildcard_txt_value }}"
         api_token: "{{ acme_cf_api_token }}"
         state: present
         solo: false
       when:
-        - not item.alias_enabled | default(false)
-        - (item.domain_wildcard_txt_value | length) > 0
-      loop: "{{ _challenge_materials }}"
-      loop_control:
-        label: "{{ item.domain }}"
-      run_once: true
+        - not domain_alias_enabled | default(false)
+        - (__domain_wildcard_txt_value | length) > 0
       register: wildcard_txt_generate_results

@@ -1,56 +1,34 @@
 ---
 
-- name: Make sure files directory exists.
+- name: Private Key | Make sure files directory exists.
   ansible.builtin.file:
-    path: "{{ acme_cf_files_dir }}/{{ item.domain }}"
+    path: "{{ acme_cf_files_dir }}/{{ domain }}"
     state: directory
     mode: "755"
-  loop: "{{ acme_cf_domains }}"
-  loop_control:
-    label: "{{ item.domain }}"
-  run_once: true
 
-# Generate account key for Let's Encrypt DNS challenge.
-
-- name: Generate an OpenSSL RSA 4096 private key for accounts.
+- name: Private Key | Generate an OpenSSL RSA 4096 private key for accounts.
   community.crypto.openssl_privatekey:
-    path: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.account.private.key"
+    path: "{{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.account.private.key"
     size: 4096
     type: RSA
-  loop: "{{ acme_cf_domains }}"
-  loop_control:
-    label: "{{ item.domain }}"
   register: acme_cf_account_private_key_results
-  run_once: true
 
-- name: Debug out the generated account key.
+- name: Private Key | Debug out the generated account key.
   ansible.builtin.debug:
-    msg: "The private key for Letsencrypt account is generated at {{ item.filename }}."
-  loop: "{{ acme_cf_account_private_key_results.results }}"
-  loop_control:
-    label: "{{ item.item.domain }}"
-  run_once: true
+    msg: "The private key for Letsencrypt account is generated at {{ acme_cf_account_private_key_results.filename }}."
   tags: [debug]
 
 # Generate private key for CSRs.
 
-- name: Generate an OpenSSL RSA 4096 private key for CSRs.
+- name: Private Key | Generate an OpenSSL RSA 4096 private key for CSRs.
   community.crypto.openssl_privatekey:
-    path: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.private.key"
+    path: "{{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.private.key"
     size: 4096
     type: RSA
-  loop: "{{ acme_cf_domains }}"
-  loop_control:
-    label: "{{ item.domain }}"
   register: acme_cf_csr_private_key_results
-  run_once: true
 
-- name: Debug out the generated CSR private key.
+- name: Private Key | Debug out the generated CSR private key.
   ansible.builtin.debug:
     msg:
-      - "The private key for the CSR is generated at {{ item.filename }}."
-  run_once: true
-  loop: "{{ acme_cf_csr_private_key_results.results }}"
-  loop_control:
-    label: "{{ item.item.domain }}"
+      - "The private key for the CSR is generated at {{ acme_cf_csr_private_key_results.filename }}."
   tags: [debug]
