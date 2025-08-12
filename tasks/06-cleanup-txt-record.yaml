@@ -1,66 +1,52 @@
 ---
 
-- name: Delete TXT records for delegated domains.
+- name: Cleanup TXT Records | Delete TXT records for delegated domains.
   block:
 
-    - name: Delete TXT record using alias on Cloudflare (base).
+    - name: Cleanup TXT Records | Delete TXT record using alias on Cloudflare (base).
       community.general.cloudflare_dns:
-        zone: "{{ item.alias_zone }}"
-        record: "{{ item.alias_record }}"
-        type: TXT
         api_token: "{{ acme_cf_api_token }}"
-        state: absent
-      when:
-        - item.alias_enabled | default(false)
-        - (item.domain_txt_value | length) > 0
-      loop: "{{ _challenge_materials }}"
-      loop_control:
-        label: "{{ item.domain }}"
-      run_once: true
-
-    - name: Delete TXT record using alias on Cloudflare (wildcard).
-      community.general.cloudflare_dns:
-        zone: "{{ item.alias_zone }}"
-        record: "{{ item.alias_record }}"
-        type: TXT
-        api_token: "{{ acme_cf_api_token }}"
-        state: absent
-      when:
-        - item.alias_enabled | default(false)
-        - (item.domain_wildcard_txt_value | length) > 0
-      loop: "{{ _challenge_materials }}"
-      loop_control:
-        label: "{{ item.domain }}"
-      run_once: true
-
-- name: Delete TXT records for non-delegated domains.
-  block:
-    - name: Delete TXT record on Cloudflare (base).
-      community.general.cloudflare_dns:
-        zone: "{{ item.domain }}"
+        zone: "{{ domain_alias_zone | default(domain) }}"
         record: "_acme-challenge"
+        value: "{{ __domain_txt_value }}"
         type: TXT
-        api_token: "{{ acme_cf_api_token }}"
         state: absent
       when:
-        - not item.alias_enabled
-        - (item.domain_txt_value | length) > 0
-      loop: "{{ _challenge_materials }}"
-      loop_control:
-        label: "{{ item.domain }}"
-      run_once: true
+        - domain_alias_enabled | default(false)
+        - (__domain_txt_value | length) > 0
 
-    - name: Delete TXT record on Cloudflare (wildcard).
+    - name: Cleanup TXT Records | Delete TXT record using alias on Cloudflare (wildcard).
       community.general.cloudflare_dns:
-        zone: "{{ item.domain }}"
-        record: "_acme-challenge"
-        type: TXT
         api_token: "{{ acme_cf_api_token }}"
+        zone: "{{ domain_alias_zone | default(domain) }}"
+        record: "_acme-challenge"
+        value: "{{ __domain_wildcard_txt_value }}"
+        type: TXT
         state: absent
       when:
-        - not item.alias_enabled | default(false)
-        - (item.domain_wildcard_txt_value | length) > 0
-      loop: "{{ _challenge_materials }}"
-      loop_control:
-        label: "{{ item.domain }}"
-      run_once: true
+        - domain_alias_enabled | default(false)
+        - (__domain_wildcard_txt_value | length) > 0
+
+# - name: Cleanup TXT Records | Delete TXT records for non-delegated domains.
+#   block:
+#     - name: Delete TXT record on Cloudflare (base).
+#       community.general.cloudflare_dns:
+#         zone: "{{ item.domain }}"
+#         record: "_acme-challenge"
+#         type: TXT
+#         api_token: "{{ acme_cf_api_token }}"
+#         state: absent
+#       when:
+#         - not domain_alias_enabled
+#         - (__domain_txt_value | length) > 0
+
+#     - name: Cleanup TXT Records | Delete TXT record on Cloudflare (wildcard).
+#       community.general.cloudflare_dns:
+#         zone: "{{ domain }}"
+#         record: "_acme-challenge"
+#         type: TXT
+#         api_token: "{{ acme_cf_api_token }}"
+#         state: absent
+#       when:
+#         - not domain_alias_enabled | default(false)
+#         - (__domain_wildcard_txt_value | length) > 0

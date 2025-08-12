@@ -1,0 +1,39 @@
+---
+
+acme_cf_domains:
+  hosts:
+    dev.example.com:
+      domain: dev.example.com
+      domain_alias_enabled: true
+      domain_alias_zone: example.xyz
+      domain_alias_record: "_acme-challenge"
+    stg.example.com:
+      domain: stg.example.com
+      domain_alias_enabled: true
+      domain_alias_zone: example.xyz
+      domain_alias_record: "_acme-challenge"
+    devops.example.com:
+      domain: devops.example.com
+      domain_alias_enabled: true
+      domain_alias_zone: example.xyz
+      domain_alias_record: "_acme-challenge"
+    itops.example.com:
+      domain: itops.example.com
+      domain_alias_enabled: true
+      domain_alias_zone: example.xyz
+      domain_alias_record: "_acme-challenge"
+    example.io:
+      domain: example.io
+      domain_alias_enabled: true
+      domain_alias_zone: example.xyz
+      domain_alias_record: "_acme-challenge"
+    example.link:
+      domain: example.link
+      domain_alias_enabled: true
+      domain_alias_zone: example.xyz
+      domain_alias_record: "_acme-challenge"
+    example.xyz:
+      domain: example.xyz
+      domain_alias_enabled: true
+      domain_alias_zone: example.xyz
+      domain_alias_record: "_acme-challenge"

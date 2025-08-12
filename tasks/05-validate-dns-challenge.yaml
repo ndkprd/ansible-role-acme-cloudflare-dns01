@@ -1,26 +1,23 @@
 ---
 
-- name: Validate challenge and retrieve the cert and intermediate certificates.
+- name: Validate Challenge | Validate challenge and retrieve the cert and intermediate certificates.
   community.crypto.acme_certificate:
-    account_key_src: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.account.private.key"
+    account_key_src: "{{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.account.private.key"
     account_email: "{{ acme_cf_account_email }}"
-    src: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.csr"
-    cert: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.crt"
-    fullchain: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.fullchain.crt"
-    chain: "{{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.intermediate.crt"
+    src: "{{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.csr"
+    cert: "{{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.crt"
+    fullchain: "{{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.fullchain.crt"
+    chain: "{{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.intermediate.crt"
     challenge: dns-01
     acme_directory: "{{ acme_cf_server_dir }}"
     remaining_days: "{{ acme_cf_remaining_days }}"
     acme_version: 2
-    data: "{{ item.challenge_data }}"
+    modify_account: true
+    data: "{{ acme_cf_dns_challenge_results }}"
   when: |
-    (item.domain_txt_value | length) > 0 or
-    (item.domain_wildcard_txt_value | length) > 0
-  loop: "{{ _challenge_materials }}"
-  loop_control:
-    label: "{{ item.domain }}"
+    (__domain_txt_value | length) > 0 or
+    (__domain_wildcard_txt_value | length) > 0
   register: validation_result
   retries: 5
   delay: 30
   until: validation_result is not failed
-  run_once: true

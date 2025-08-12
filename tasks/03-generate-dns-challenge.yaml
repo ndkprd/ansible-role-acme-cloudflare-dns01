@@ -4,14 +4,14 @@
   community.crypto.acme_certificate:
     account_key_src: "{{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.account.private.key"
     account_email: "{{ acme_cf_account_email }}"
-    src: "{{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.csr"
+    csr: "{{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.csr"
     cert: "{{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.crt"
     challenge: "dns-01"
     acme_directory: "{{ acme_cf_server_dir }}"
     remaining_days: "{{ acme_cf_remaining_days }}"
     acme_version: 2
     terms_agreed: true
-    modify_account: false
+    modify_account: true
   register: acme_cf_dns_challenge_results
 
 - name: DNS Challenge | Debug dns_challenge variable.

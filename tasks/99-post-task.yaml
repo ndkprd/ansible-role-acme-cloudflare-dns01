@@ -3,14 +3,10 @@
 - name: Debug certificate files location.
   ansible.builtin.debug:
     msg:
-      - "Private key file: {{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.private.key"
-      - "CSR file: {{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.csr."
-      - "Cert file (.crt): {{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.crt."
-      - "Cert file (.p12): {{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.p12."
-      - "Intermediate file: {{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.intermediate.crt."
-      - "Fullchain cert file: {{ acme_cf_files_dir }}/{{ item.domain }}/{{ item.domain }}.fullchain.crt."
-  loop: "{{ _challenge_materials }}"
-  loop_control:
-    label: "{{ item.domain }}"
-  run_once: true
+      - "Private key file: {{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.private.key"
+      - "CSR file: {{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.csr."
+      - "Cert file (.crt): {{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.crt."
+      - "Cert file (.p12): {{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.p12."
+      - "Intermediate file: {{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.intermediate.crt."
+      - "Fullchain cert file: {{ acme_cf_files_dir }}/{{ domain }}/{{ domain }}.fullchain.crt."
   tags: [debug]

@@ -12,7 +12,6 @@
       | map('regex_replace', '^', 'DNS:')
       | list
       }}
-  run_once: true
   register: acme_cf_csr_generate_result
 
 - name: CSR | Debug out the generated CSR.
